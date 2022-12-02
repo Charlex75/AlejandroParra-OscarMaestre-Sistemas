@@ -183,3 +183,26 @@ void positivo_cache(int time, int direccion, int etiqueta, int linea, int palabr
 	frases[*alfa]=tbl[linea].Data[palabra];
 	(*alfa)++;
 }
+
+//Alex hizo esta funcion
+//Funcion que vuelca por pantalla todos los datos que contenia la cache
+void VolcarCACHE(T_CACHE_LINE *tbl){
+	for(int a=0; a<NUM_FILAS; a++){
+        	printf("ETQ:%02X  DATA", tbl[a].ETQ);
+		for(int s=TAM_LINEA-1; s>=0; s--){
+            		printf(" %02X", tbl[a].Data[s]);
+        	}
+        	printf("\n");
+    	}
+	printf("\n");
+
+}
+
+//Alex hizo esta funcion
+//Funcion que manda los datos faltantes hacia la cache desde la RAM
+void TratarFallo(T_CACHE_LINE *tbl, char *MRAM, int ETQ, int linea, int bloque){
+	for(int a=0; a<TAM_LINEA; a++){
+		tbl[linea].Data[a]=MRAM[bloque*TAM_LINEA+a];
+	}
+	tbl[linea].ETQ = ETQ;
+}
