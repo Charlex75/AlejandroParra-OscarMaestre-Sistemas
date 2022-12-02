@@ -157,7 +157,7 @@ int binario_decimal(int *binario, int num){
 void ParsearDireccion(unsigned int addr, int *ETQ, int *palabra, int *linea, int *bloque){
 	int a,b,c;
 	int etiqueta_int=0;
-        int linea_int=0;
+    int linea_int=0;
 	int bin[TAM_BUS]={0};
 	hexadecimal_binario(addr, bin);
 	for(a=0; a<DIREC_ETQ; a++){
@@ -171,7 +171,15 @@ void ParsearDireccion(unsigned int addr, int *ETQ, int *palabra, int *linea, int
 		palabra[c]=bin[c+DIREC_ETQ+DIREC_LINEA];
 	}
 	etiqueta_int=binario_decimal(ETQ,DIREC_ETQ);
-        linea_int=binario_decimal(linea,DIREC_LINEA);
-
+    linea_int=binario_decimal(linea,DIREC_LINEA);
 	*bloque=etiqueta_int*NUM_FILAS+linea_int;
+}
+
+//Oscar hizo esta funcion
+//Funcion que imprime por pantalla la informacion relacionada con el acierto de la cache
+void positivo_cache(int time, int direccion, int etiqueta, int linea, int palabra, T_CACHE_LINE *tbl, char *frases, int *alfa){
+
+	printf("T: %d, Acierto de CACHE, ADDR %04X Label %X linea %02X palabra %02X DATO %02X\n", time, direccion, etiqueta, linea, palabra, tbl[linea].Data[palabra]);
+	frases[*alfa]=tbl[linea].Data[palabra];
+	(*alfa)++;
 }
