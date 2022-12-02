@@ -26,3 +26,28 @@ void VolcarCACHE(T_CACHE_LINE *tbl);
 void TratarFallo(T_CACHE_LINE *tbl, char *MRAM, int ETQ, int linea, int bloque); 
 void LimpiarCACHE(T_CACHE_LINE tbl[NUM_FILAS]); 
 
+//Oscar se encargaba de hacer el main y Alex hizo los comandos relacionados con el uso de los ficheros y los mensages que se printan al final
+int main(){
+        //Variables inizializadas
+        int globaltime=0;
+        int numfallos=0;
+        int numaccesos=0;
+        float tiempomedio=0;
+
+        int etiqueta[DIREC_ETQ]={0};
+        int linea[DIREC_LINEA]={0};
+        int palabra[DIREC_PALABRA]={0};
+
+        int etiqueta_int=0;
+        int linea_int=0;
+        int palabra_int=0;
+
+        int alfa=0;
+        int bloque=0;
+        unsigned int direccion=0;
+        int hexa[TAM_BUS]={0};
+        unsigned char Simul_RAM[TAM_RAM], frases[100];
+
+
+        //Estructura de cache inizializada
+        T_CACHE_LINE cache[NUM_FILAS];
