@@ -75,36 +75,82 @@ int main(){
 	}
 
  //Copio los contenidos de contenido_ram en Simul_RAM y limpio el posible contenido de la cache
-        fread(Simul_RAM, 1, TAM_RAM, contenido_ram);
-        LimpiarCACHE(cache);
+    fread(Simul_RAM, 1, TAM_RAM, contenido_ram);
+    LimpiarCACHE(cache);
 
-        //Bucle principal que no se detiene hasta que llege al final de accesos_memoria
-        while(fscanf(accesos_memoria, "%X", &direccion)!=EOF){
+    //Bucle principal que no se detiene hasta que llege al final de accesos_memoria
+    while(fscanf(accesos_memoria, "%X", &direccion)!=EOF){
 
-                //Divido direccion en etiqueta palabra y linea, tambien calcule en que bloque le correspondia
-                ParsearDireccion(direccion, etiqueta, palabra, linea, &bloque);
+        //Divido direccion en etiqueta palabra y linea, tambien calcule en que bloque le correspondia
+        ParsearDireccion(direccion, etiqueta, palabra, linea, &bloque);
 
-                //Paso de binario a hexadecimal
-                etiqueta_int=binario_decimal(etiqueta,5);
-                linea_int=binario_decimal(linea,3);
-                palabra_int=binario_decimal(palabra,4);
+        //Paso de binario a hexadecimal
+        etiqueta_int=binario_decimal(etiqueta,5);
+        linea_int=binario_decimal(linea,3);
+        palabra_int=binario_decimal(palabra,4);
 
-                //Compruebo si la etiqueta de la linea es igual a la etiqueta de la direccion y en consecuencia hacer lo pedido por el enunciado
-                if(cache[linea_int].ETQ==etiqueta_int){
-                        positivo_cache(globaltime, direccion, etiqueta_int, linea_int, palabra_int, cache, frases, &alfa);
-
-                }else{
-                        numfallos++;
-                        printf("T: %d, Fallo de CACHE %d, ADDR %04X Label %X linea %02X palabra %02X bloque %02X\n", globaltime, numfallos, direccion, etiqueta_int, linea_int, palabra_int, bloque);
-                        globaltime=globaltime+10;
-                        TratarFallo(cache, Simul_RAM, etiqueta_int, linea_int, bloque);
-                        printf("Cargando el bloque %02X en la linea %02X\n", bloque, linea_int);
-                        positivo_cache(globaltime, direccion, etiqueta_int, linea_int, palabra_int, cache, frases, &alfa);
-                }
-
-                //Volcar la cache por pantalla, aumentar en 1 el numero de accesos y hacer una pausa de 1 segundo
-                VolcarCACHE(cache);
-                numaccesos++;
-                sleep(1);
-
+        //Compruebo si la etiqueta de la linea es igual a la etiqueta de la direccion y en consecuencia hacer lo pedido por el enunciado
+        if(cache[linea_int].ETQ==etiqueta_int){
+            positivo_cache(globaltime, direccion, etiqueta_int, linea_int, palabra_int, cache, frases, &alfa);
+        }else{
+            numfallos++;
+            printf("T: %d, Fallo de CACHE %d, ADDR %04X Label %X linea %02X palabra %02X bloque %02X\n", globaltime, numfallos, direccion, etiqueta_int, linea_int, palabra_int, bloque);
+            globaltime=globaltime+10;
+            TratarFallo(cache, Simul_RAM, etiqueta_int, linea_int, bloque);
+            printf("Cargando el bloque %02X en la linea %02X\n", bloque, linea_int);
+            positivo_cache(globaltime, direccion, etiqueta_int, linea_int, palabra_int, cache, frases, &alfa);
         }
+
+        //Volcar la cache por pantalla, aumentar en 1 el numero de accesos y hacer una pausa de 1 segundo
+        VolcarCACHE(cache);
+        numaccesos++;
+        sleep(1);
+    }
+    //Se calcula el tiempo promedio transcurrido y se imprime por pantalla los datos establecidos por el programa y el texto leido
+	tiempomedio=(float)globaltime/(float)numaccesos;
+	printf("Accesos totales: %d; fallos: %d; Tiempo medio: %f\n", numaccesos, numfallos, tiempomedio);
+	printf("Texto leido: %s\n", frases);
+
+	//Pasar los datos de la cache en el fichero previamente creado
+	for(int e=0; e<NUM_FILAS; e++){
+                fwrite(cache[e].Data, TAM_LINEA, 1, contenido_cache);
+        }
+
+	//Cerrar los tres ficheros y devolver 0 para acabar el programa
+	fclose(contenido_ram);
+        fclose(accesos_memoria);
+        fclose(contenido_cache);
+        return 0;
+
+}
+
+//Alex hizo esta funcion
+//Una funcion que se dedica a pasar valores hexadecimales a binarios cada vez que se invoca
+void hexadecimal_binario(int direccion, int *bin){
+	div_t dividir;
+        for(int a=0; a<TAM_BUS; a++){
+                dividir=div(direccion, 2);
+                direccion=dividir.quot;
+                bin[11-a]=dividir.rem;
+        }
+}
+
+//Alex hizo esta funcion
+//Una funcion que se dedica a pasar valores binarios a decimales cada vez que se invoca
+int binario_decimal(int *binario, int num){
+	int respuesta=0;
+	
+	if(num==3){
+		respuesta=binario[0]*4+binario[1]*2+binario[2]*1;
+	}
+	if(num==4){
+                respuesta=binario[0]*8+binario[1]*4+binario[2]*2+binario[3]*1;
+        }
+	if(num==5){
+                respuesta=binario[0]*16+binario[1]*8+binario[2]*4+binario[3]*2+binario[4]*1;
+        }
+
+
+	return respuesta;
+} 
+
