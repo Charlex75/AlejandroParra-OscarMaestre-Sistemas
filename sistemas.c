@@ -113,14 +113,14 @@ int main(){
 
 	//Pasar los datos de la cache en el fichero previamente creado
 	for(int e=0; e<NUM_FILAS; e++){
-                fwrite(cache[e].Data, TAM_LINEA, 1, contenido_cache);
-        }
+        fwrite(cache[e].Data, TAM_LINEA, 1, contenido_cache);
+    }
 
 	//Cerrar los tres ficheros y devolver 0 para acabar el programa
 	fclose(contenido_ram);
-        fclose(accesos_memoria);
-        fclose(contenido_cache);
-        return 0;
+    fclose(accesos_memoria);
+    fclose(contenido_cache);
+    return 0;
 
 }
 
@@ -128,11 +128,11 @@ int main(){
 //Una funcion que se dedica a pasar valores hexadecimales a binarios cada vez que se invoca
 void hexadecimal_binario(int direccion, int *bin){
 	div_t dividir;
-        for(int a=0; a<TAM_BUS; a++){
-                dividir=div(direccion, 2);
-                direccion=dividir.quot;
-                bin[11-a]=dividir.rem;
-        }
+    for(int a=0; a<TAM_BUS; a++){
+        dividir=div(direccion, 2);
+        direccion=dividir.quot;
+        bin[11-a]=dividir.rem;
+    }
 }
 
 //Alex hizo esta funcion
@@ -144,14 +144,34 @@ int binario_decimal(int *binario, int num){
 		respuesta=binario[0]*4+binario[1]*2+binario[2]*1;
 	}
 	if(num==4){
-                respuesta=binario[0]*8+binario[1]*4+binario[2]*2+binario[3]*1;
-        }
+        respuesta=binario[0]*8+binario[1]*4+binario[2]*2+binario[3]*1;
+    }
 	if(num==5){
-                respuesta=binario[0]*16+binario[1]*8+binario[2]*4+binario[3]*2+binario[4]*1;
-        }
-
-
+        respuesta=binario[0]*16+binario[1]*8+binario[2]*4+binario[3]*2+binario[4]*1;
+    }
 	return respuesta;
 } 
 
+//Oscar hizo esta funcion
+//Es una funcion que sirbe para separar una direccion binaria en sus correspondientes partes ademas de calcular el que bloque al que pertenece la direccion de memoria
+void ParsearDireccion(unsigned int addr, int *ETQ, int *palabra, int *linea, int *bloque){
+	int a,b,c;
+	int etiqueta_int=0;
+        int linea_int=0;
+	int bin[TAM_BUS]={0};
+	hexadecimal_binario(addr, bin);
+	for(a=0; a<DIREC_ETQ; a++){
+		ETQ[a]=bin[a];
+	}
+	for(b=0; b<DIREC_LINEA; b++){
+		linea[b]=bin[b+DIREC_ETQ];
+	}
 
+	for(c=0; c<DIREC_PALABRA; c++){
+		palabra[c]=bin[c+DIREC_ETQ+DIREC_LINEA];
+	}
+	etiqueta_int=binario_decimal(ETQ,DIREC_ETQ);
+        linea_int=binario_decimal(linea,DIREC_LINEA);
+
+	*bloque=etiqueta_int*NUM_FILAS+linea_int;
+}
