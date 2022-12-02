@@ -28,26 +28,49 @@ void LimpiarCACHE(T_CACHE_LINE tbl[NUM_FILAS]);
 
 //Oscar se encargaba de hacer el main y Alex hizo los comandos relacionados con el uso de los ficheros y los mensages que se printan al final
 int main(){
-        //Variables inizializadas
-        int globaltime=0;
-        int numfallos=0;
-        int numaccesos=0;
-        float tiempomedio=0;
+    //Variables inizializadas
+    int globaltime=0;
+    int numfallos=0;
+    int numaccesos=0;
+    float tiempomedio=0;
 
-        int etiqueta[DIREC_ETQ]={0};
-        int linea[DIREC_LINEA]={0};
-        int palabra[DIREC_PALABRA]={0};
+    int etiqueta[DIREC_ETQ]={0};
+    int linea[DIREC_LINEA]={0};
+    int palabra[DIREC_PALABRA]={0};
 
-        int etiqueta_int=0;
-        int linea_int=0;
-        int palabra_int=0;
+    int etiqueta_int=0;
+    int linea_int=0;
+    int palabra_int=0;
 
-        int alfa=0;
-        int bloque=0;
-        unsigned int direccion=0;
-        int hexa[TAM_BUS]={0};
-        unsigned char Simul_RAM[TAM_RAM], frases[100];
+    int alfa=0;
+    int bloque=0;
+    unsigned int direccion=0;
+    int hexa[TAM_BUS]={0};
+    unsigned char Simul_RAM[TAM_RAM], frases[100];
 
 
-        //Estructura de cache inizializada
-        T_CACHE_LINE cache[NUM_FILAS];
+    //Estructura de cache inizializada
+    T_CACHE_LINE cache[NUM_FILAS];
+
+	//Abrir los dos ficheros y comprobar si se an abierto correctamente
+    FILE *contenido_ram;
+    contenido_ram = fopen("CONTENTS_RAM.bin", "rb");
+	if(contenido_ram  == NULL){
+		printf("Error, no se puede abrir CONTENTS_RAM.bin\n");
+		return -1;
+    	}
+	FILE *accesos_memoria;
+	accesos_memoria = fopen("accesos_memoria.txt", "r");
+	if(accesos_memoria == NULL){
+		printf("Error, no se puede abrir accesos_memoria.txt\n");
+        	return -1;
+    	}
+
+	//Crear el fichero y comprobar si se a creado correctamente
+	FILE *contenido_cache;
+	contenido_cache = fopen("CONTENTS_CACHE.bin", "wb");
+	if(contenido_cache == NULL){
+                printf("Error, no se puede crear CONTENTS_CACHE.bin\n");
+        	return -1;
+	}
+
