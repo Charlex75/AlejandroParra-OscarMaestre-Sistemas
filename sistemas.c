@@ -206,3 +206,14 @@ void TratarFallo(T_CACHE_LINE *tbl, char *MRAM, int ETQ, int linea, int bloque){
 	}
 	tbl[linea].ETQ = ETQ;
 }
+
+//Oscar hizo esta funcion
+//Funcion que restablece todos los datos de la cache a como los tenia desde el inicio
+void LimpiarCACHE(T_CACHE_LINE tbl[NUM_FILAS]){
+	for(int a=0; a<NUM_FILAS; a++){
+        	tbl[a].ETQ=0xFF;
+		for(int s=0; s<TAM_LINEA; s++){
+        		tbl[a].Data[s]=0x23;
+        	}
+    	}
+}
