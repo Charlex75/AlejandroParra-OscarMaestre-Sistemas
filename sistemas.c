@@ -124,33 +124,3 @@ int main(){
 
 }
 
-//Alex hizo esta funcion
-//Una funcion que se dedica a pasar valores hexadecimales a binarios cada vez que se invoca
-void hexadecimal_binario(int direccion, int *bin){
-	div_t dividir;
-        for(int a=0; a<TAM_BUS; a++){
-                dividir=div(direccion, 2);
-                direccion=dividir.quot;
-                bin[11-a]=dividir.rem;
-        }
-}
-
-//Alex hizo esta funcion
-//Una funcion que se dedica a pasar valores binarios a decimales cada vez que se invoca
-int binario_decimal(int *binario, int num){
-	int respuesta=0;
-	
-	if(num==3){
-		respuesta=binario[0]*4+binario[1]*2+binario[2]*1;
-	}
-	if(num==4){
-                respuesta=binario[0]*8+binario[1]*4+binario[2]*2+binario[3]*1;
-        }
-	if(num==5){
-                respuesta=binario[0]*16+binario[1]*8+binario[2]*4+binario[3]*2+binario[4]*1;
-        }
-
-
-	return respuesta;
-} 
-
